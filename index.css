@@ -838,54 +838,77 @@
     color: #fff !important;
   }
 
+  .admin-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0 auto;
+    padding: 1.5rem 0;
+  }
+
   .admin-table {
-    margin: 2rem auto;
+    width: 100%;
+    min-width: 600px;
     border-collapse: collapse;
-    width: 98%;
-    max-width: 1100px;
-    min-width: 700px;
-    background: transparent;
-    border-radius: 10px;
-    box-shadow: none;
+    background: #18191a;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    margin: 0 auto;
     overflow: hidden;
   }
+
   .admin-table th, .admin-table td {
-    padding: 0.75em 1em;
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+    padding: 1em 1.2em;
+    border-bottom: 1px solid #23272f;
+    background: transparent;
   }
+
   .admin-table th {
-    background: #d1d1d1;
-    color: #2E2B41;
+    background: #23272f;
+    color: #f1f1f1;
     font-weight: 700;
   }
+
   .admin-table tr:last-child td {
     border-bottom: none;
   }
-  body.dark-mode .admin-table {
-    background: var(--card-bg);
-    color: var(--text-color);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+
+  .admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 0;
   }
-  body.dark-mode .admin-table th {
-    background: #23272f;
-    color: #f1f1f1;
-    border-bottom: 1px solid #23272f;
+
+  .admin-actions button {
+    width: 120px;
+    min-width: 90px;
+    max-width: 140px;
+    margin-bottom: 0;
+    font-size: 0.98em;
+    margin-left: auto;
+    margin-right: auto;
   }
-  body.dark-mode .admin-table td {
-    background: var(--card-bg);
-    color: var(--text-color);
-    border-bottom: 1px solid #444;
-  }
+
   @media (max-width: 700px) {
     .admin-table {
-      width: 600px;
-      min-width: 600px;
-      font-size: 0.95em;
+      min-width: 400px;
+      font-size: 0.92em;
+    }
+    .admin-table th, .admin-table td {
+      padding: 0.7em 0.5em;
     }
   }
-  @media (max-width: 400px) {
+
+  @media (max-width: 500px) {
     .admin-table {
+      min-width: 320px;
       font-size: 0.85em;
+    }
+    .admin-table th, .admin-table td {
+      padding: 0.5em 0.2em;
     }
   }

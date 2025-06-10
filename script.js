@@ -512,7 +512,7 @@ ${includeTax ? '(Includes 3% Franchise Tax)' : ''}`;
     const table = document.getElementById('costListTable').querySelector('tbody');
     table.innerHTML = '';
     updateTotalCost();
-    saveCostListToStorage();
+    localStorage.removeItem(getUserStorageKey('costList'));
   }
 
   async function exportCostListPDF() {
@@ -561,8 +561,13 @@ ${includeTax ? '(Includes 3% Franchise Tax)' : ''}`;
     document.getElementById('applianceTax').checked = false;
     document.getElementById('multiplierContainer').classList.add('hidden');
     document.getElementById('applianceResult').innerText = '';
-    localStorage.removeItem('formData');
+    localStorage.removeItem(getUserStorageKey('formData'));
     clearCostTable();
+  }
+
+  function getUserStorageKey(baseKey) {
+    const user = firebase.auth().currentUser;
+    return user ? `${baseKey}_${user.uid}` : baseKey;
   }
 
   function saveCostListToStorage() {
@@ -579,11 +584,11 @@ ${includeTax ? '(Includes 3% Franchise Tax)' : ''}`;
             franchiseTax: cells[5]?.textContent || ''
         };
     });
-    localStorage.setItem('costList', JSON.stringify(data));
+    localStorage.setItem(getUserStorageKey('costList'), JSON.stringify(data));
   }
 
   function loadCostListFromStorage() {
-    const data = JSON.parse(localStorage.getItem('costList') || '[]');
+    const data = JSON.parse(localStorage.getItem(getUserStorageKey('costList')) || '[]');
     const costListTable = document.getElementById('costListTable');
     if (!costListTable) return; // Prevent error if not on main page
     const table = costListTable.querySelector('tbody');
@@ -621,11 +626,11 @@ ${includeTax ? '(Includes 3% Franchise Tax)' : ''}`;
         multiplier: document.getElementById('multiplier').value,
         applianceTax: document.getElementById('applianceTax').checked
     };
-    localStorage.setItem('formData', JSON.stringify(formData));
+    localStorage.setItem(getUserStorageKey('formData'), JSON.stringify(formData));
   }
 
   function loadFormFromStorage() {
-    const formData = JSON.parse(localStorage.getItem('formData') || '{}');
+    const formData = JSON.parse(localStorage.getItem(getUserStorageKey('formData')) || '{}');
     document.getElementById('applianceCategory').value = formData.applianceCategory || '';
     document.getElementById('applianceName').value = formData.applianceName || '';
     document.getElementById('inputType').value = formData.inputType || 'watt';
@@ -657,4 +662,12 @@ ${includeTax ? '(Includes 3% Franchise Tax)' : ''}`;
         this.blur();
       });
     });
+  });
+
+  // On login, load user-specific data
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      loadCostListFromStorage();
+      loadFormFromStorage();
+    }
   });
