@@ -68,19 +68,27 @@
         <label for="signup-email">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
         </label>
-        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="email" id="signup-email" placeholder="Email" required autocomplete="email">
       </div>
-      <div>
+      <div style="position:relative; width:100%; display:flex; align-items:center;">
         <label for="signup-password">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
-        <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required minlength="6">
+        <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required minlength="6" style="flex:1;" autocomplete="new-password">
+        <span id="toggle-signup-password" style="position:absolute; right:10px; cursor:pointer;">
+          <svg id="eye-signup-password" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <svg id="eye-off-signup-password" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292M6.423 6.423A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.043M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/></svg>
+        </span>
       </div>
-      <div>
+      <div style="position:relative; width:100%; display:flex; align-items:center;">
         <label for="signup-confirm">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
-        <input type="password" id="signup-confirm" placeholder="Confirm Password" required minlength="6">
+        <input type="password" id="signup-confirm" placeholder="Confirm Password" required minlength="6" style="flex:1;" autocomplete="new-password">
+        <span id="toggle-signup-confirm" style="position:absolute; right:10px; cursor:pointer;">
+          <svg id="eye-signup-confirm" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <svg id="eye-off-signup-confirm" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292M6.423 6.423A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.043M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/></svg>
+        </span>
       </div>
       <button type="submit">Sign Up</button>
     </form>
@@ -119,23 +127,26 @@
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
+          // Store user data in Realtime Database immediately after signup
           firebase.database().ref('users/' + user.uid).set({
             email: user.email,
-            createdAt: new Date().toISOString()
+            uid: user.uid,
+            username: email.split('@')[0]
           }).then(() => {
             user.sendEmailVerification()
               .then(() => {
                 verifyMsg.textContent = 'Verification email sent! Please check your inbox and verify your email before logging in.';
                 setTimeout(function() {
-                  window.location.href = 'login.html';
-                  setTimeout(function() {
-                    firebase.auth().signOut();
-                  }, 500);
-                }, 200);
+                  firebase.auth().signOut().then(() => {
+                    window.location.href = 'login.html';
+                  });
+                }, 2000);
               })
               .catch((error) => {
                 errorMsg.textContent = 'Failed to send verification email: ' + error.message;
               });
+          }).catch((error) => {
+            errorMsg.textContent = 'Failed to save user data: ' + error.message;
           });
         })
         .catch((error) => {
@@ -155,20 +166,67 @@
       firebase.auth().signInWithPopup(provider)
         .then(function(result) {
           var user = result.user;
-          firebase.database().ref('users/' + user.uid).once('value').then(function(snapshot) {
-            if (!snapshot.exists()) {
-              firebase.database().ref('users/' + user.uid).set({
-                email: user.email,
-                createdAt: new Date().toISOString(),
-                provider: 'google'
-              });
+          // Check if user has a password provider
+          var hasPassword = false;
+          user.providerData.forEach(function(profile) {
+            if (profile.providerId === 'password') {
+              hasPassword = true;
             }
-            window.location.href = 'index.html';
           });
+          if (!hasPassword) {
+            window.location.href = 'set-password.html';
+          } else {
+            window.location.href = 'index.html';
+          }
         })
         .catch(function(error) {
-          document.getElementById('error-message').textContent = 'Google sign up failed. Please try again.';
+          if (error.code === 'auth/account-exists-with-different-credential') {
+            var pendingCred = error.credential;
+            var email = error.email;
+            var password = prompt('This email is already registered. Please enter your password to link your Google account:');
+            firebase.auth().signInWithEmailAndPassword(email, password)
+              .then(function(userCredential) {
+                return userCredential.user.linkWithCredential(pendingCred);
+              })
+              .then(function() {
+                window.location.href = 'index.html';
+              })
+              .catch(function(linkError) {
+                alert('Failed to link accounts: ' + linkError.message);
+              });
+          } else {
+            document.getElementById('error-message').textContent = 'Google sign up failed. Please try again.';
+          }
         });
+    };
+
+    document.getElementById('toggle-signup-password').onclick = function() {
+      var input = document.getElementById('signup-password');
+      var eye = document.getElementById('eye-signup-password');
+      var eyeOff = document.getElementById('eye-off-signup-password');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.style.display = 'none';
+        eyeOff.style.display = 'inline';
+      } else {
+        input.type = 'password';
+        eye.style.display = 'inline';
+        eyeOff.style.display = 'none';
+      }
+    };
+    document.getElementById('toggle-signup-confirm').onclick = function() {
+      var input = document.getElementById('signup-confirm');
+      var eye = document.getElementById('eye-signup-confirm');
+      var eyeOff = document.getElementById('eye-off-signup-confirm');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.style.display = 'none';
+        eyeOff.style.display = 'inline';
+      } else {
+        input.type = 'password';
+        eye.style.display = 'inline';
+        eyeOff.style.display = 'none';
+      }
     };
   </script>
 </body>

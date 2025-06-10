@@ -6,11 +6,16 @@
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <title>ElecTrack</title>
-    <script src="script.js" defer></script>
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="firebase.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js" defer></script>
+
+    <!-- PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -35,14 +40,46 @@
 
         <div class="calculator-section">
           <div class="input-group">
+            <label for="applianceCategory">Filter by type</label>
+            <select id="applianceCategory" onchange="onCategoryChange()">
+              <option value="all">View All</option>
+              <option value="Air Conditioners">Air Conditioners</option>
+              <option value="Audio and Video">Audio and Video</option>
+              <option value="Computers and Gadgets">Computers and Gadgets</option>
+              <option value="Fans">Fans</option>
+              <option value="Freezers">Freezers</option>
+              <option value="General Appliances">General Appliances</option>
+              <option value="Kitchen Appliances">Kitchen Appliances</option>
+              <option value="Lighting">Lighting</option>
+              <option value="Refrigerators">Refrigerators</option>
+              <option value="Washers and Dryers">Washers and Dryers</option>
+            </select>
+
+            <label for="applianceNameDropdown" id="applianceNameDropdownLabel" style="display:none;">Select Appliance:</label>
+            <select id="applianceNameDropdown" style="display:none;" onchange="onApplianceChange()"></select>
+
             <label for="applianceName">Appliance Name:</label>
-            <input type="text" id="applianceName" placeholder="Example: Air Conditioner" required>
+            <input type="text" id="applianceName" placeholder="Enter appliance name (optional)">
 
-            <label for="wattage">Wattage (W):</label>
-            <input type="number" id="wattage" placeholder="Example: 10" min="1" step="any" required>
+            <input type="text" id="customApplianceName" placeholder="Enter custom appliance name" style="display:none; margin-top: 8px;" />
 
-            <label for="hours">Hours Used Per Day:</label>
-            <input type="number" id="hours" placeholder="Example: 5" min="0.01" step="any" required>
+            <label for="inputType">Input Type:</label>
+            <select id="inputType" onchange="toggleInputType()">
+              <option value="watt">Wattage (W)</option>
+              <option value="kwh">Energy Used (kWh)</option>
+            </select>
+
+            <div id="wattageGroup">
+              <label for="wattage">Wattage (W):</label>
+              <input type="number" id="wattage" placeholder="Example: 10" min="1" step="any">
+              <label for="hours">Hours Used Per Day:</label>
+              <input type="number" id="hours" placeholder="Example: 5" min="0.01" step="any">
+            </div>
+
+            <div id="kwhGroup" class="hidden">
+              <label for="energyUsed">Energy Used (kWh):</label>
+              <input type="number" id="energyUsed" placeholder="Example: 2.5" min="0.01" step="any">
+            </div>
 
             <label for="duration">Duration:</label>
             <select id="duration" onchange="toggleMultiplierInput()" required>
@@ -57,13 +94,16 @@
               <input type="number" id="multiplier" placeholder="e.g., 3" min="1">
             </div>
 
-            <label>
-              <input type="checkbox" id="applianceTax"> Include Franchise Tax
-            </label>
+            <div class="tax-option">
+              <input type="checkbox" id="applianceTax">
+              <label for="applianceTax" class="tax-label">
+                Include Franchise Tax
+              </label>
+              <span class="info-icon" tabindex="0" title="Adds a 3% government-mandated franchise tax to your bill.">ℹ️</span>
+            </div>
 
             <button onclick="calculateApplianceCost()" class="calculate-btn">Calculate Energy Cost</button>
           </div>
-
           <div id="applianceResult" class="result"></div>
         </div>
 
@@ -93,44 +133,43 @@
           <button onclick="clearCostTable()">Clear Table</button>
         </div>
 
-        <div class="tutorial-section">
+        <div class="tutorial-section modern-tutorial">
           <h3>How to Use the Calculator</h3>
           <div class="tutorial-steps">
-            <div class="step">
-              <h4>Step 1: Enter Appliance Details</h4>
-              <p>Enter the name of your appliance and its wattage. You can find the wattage on the appliance's label or manual. Common examples:</p>
-              <ul>
-                <li>Air Conditioner: 1000-3500W</li>
-                <li>Refrigerator: 100-400W</li>
-                <li>LED TV: 30-100W</li>
-                <li>Washing Machine: 300-500W</li>
-              </ul>
+            <div class="tutorial-step">
+              <div class="step-icon">1</div>
+              <div>
+                <strong>Select or Enter Appliance</strong>
+                <p>Choose a category and appliance, or type a custom name if yours isn't listed.</p>
+              </div>
             </div>
-
-            <div class="step">
-              <h4>Step 2: Set Usage Duration</h4>
-              <p>Specify how many hours per day you use the appliance and select the time period you want to calculate for:</p>
-              <ul>
-                <li>Hour: For one-time usage</li>
-                <li>Day: For daily usage</li>
-                <li>Week: For weekly usage</li>
-                <li>Month: For monthly usage</li>
-              </ul>
+            <div class="tutorial-step">
+              <div class="step-icon">2</div>
+              <div>
+                <strong>Enter Appliance Details</strong>
+                <p>Enter the wattage (W) or energy used (kWh), and how many hours per day you use it.</p>
+              </div>
             </div>
-
-            <div class="step">
-              <h4>Step 3: Additional Options</h4>
-              <p>Check the "Include Franchise Tax" box if you want to include the 3% franchise tax in your calculation.</p>
+            <div class="tutorial-step">
+              <div class="step-icon">3</div>
+              <div>
+                <strong>Set Calculation Period</strong>
+                <p>Choose Hour, Day, Week, or Month. For longer periods, enter the number of days/weeks/months.</p>
+              </div>
             </div>
-
-            <div class="step">
-              <h4>Step 4: View Results</h4>
-              <p>The calculator will show you:</p>
-              <ul>
-                <li>Total energy cost in Philippine Pesos (₱)</li>
-                <li>Total energy consumption in kilowatt-hours (kWh)</li>
-                <li>Rate per kilowatt-hour</li>
-              </ul>
+            <div class="tutorial-step">
+              <div class="step-icon">4</div>
+              <div>
+                <strong>Additional Options</strong>
+                <p>(Optional) Check "Include Franchise Tax" to add the 3% tax.</p>
+              </div>
+            </div>
+            <div class="tutorial-step">
+              <div class="step-icon">5</div>
+              <div>
+                <strong>Calculate and Review</strong>
+                <p>Click <span class="highlight">Calculate Energy Cost</span> to see your results. Add more appliances, export as PDF, or clear the table anytime.</p>
+              </div>
             </div>
           </div>
         </div>

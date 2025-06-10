@@ -8,110 +8,200 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="firebase.js"></script>
+  <style>
+    body {
+      min-height: 100vh;
+      background-image: url(images/background.jpg);
+      background-size: cover;
+      background-position: bottom;
+      overflow: hidden;
+      display: flex;
+      justify-content: left;
+    }
+    .error-message {
+      color: #d32f2f;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .success-message {
+      color: #388e3c;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
-<style>
-   body{
-  min-height: 100vh;
-  background-image: url(images/background.jpg);
-  background-size: cover;
-  background-position: bottom;
-  overflow: hidden;
-  display: flex;
-  justify-content: left;
-}
-</style>
-
 <body>
-  
   <div class="wrapper">
-
-    <img src="images/ElecTrackLogo.jpg" class="logo" alt="ElecTrack Logo">
     <h1>ElecTrack</h1>
-    <p id="error-message"></p>
+    <p id="error-message" class="error-message"></p>
+    <p id="success-message" class="success-message"></p>
 
     <form id="form" onsubmit="return handleLogin(event)">
-    <div>
+      <div>
         <label for="username-input">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
         </label>
-        <input type="email" name="username" id="username-input" placeholder="Email" required>
+        <input type="email" name="username" id="username-input" placeholder="Email" required autocomplete="email">
       </div>
 
-      <div>
+      <div style="position:relative; width:100%; display:flex; align-items:center;">
         <label for="password-input">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
-        <input type="password" name="password" id="password-input" placeholder="Password" required>
+        <input type="password" name="password" id="password-input" placeholder="Password" required style="flex:1;" autocomplete="current-password">
+        <span id="toggle-login-password" class="password-toggle">
+          <svg id="eye-login-password" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <svg id="eye-off-login-password" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292M6.423 6.423A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.043M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/></svg>
+        </span>
       </div>
 
-      <button type="submit" name="login_user">Login</button>
+      <button type="submit" name="login_user" id="login-btn">Log In</button>
     </form>
 
-    <div id="verify-message" style="color:red;"></div>
+    <div id="verify-message" class="error-message"></div>
 
     <p>New here? <a href="signup.html">Create an Account</a></p>
-    <p>Forgot Password? <a href="forgot.html" id="forgot-password-link">Reset Password</a></p>
+    <p>Forgot Password? <a href="forgot.html" id="forgot-password-link">Here</a></p>
   </div>
 
   <script>
+    function showMessage(elementId, message, isError = true) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = isError ? 'error-message' : 'success-message';
+      setTimeout(() => {
+        element.textContent = '';
+      }, 5000);
+    }
+
     function handleLogin(event) {
       event.preventDefault();
       const email = document.getElementById('username-input').value.trim();
       const password = document.getElementById('password-input').value;
-      const errorMsg = document.getElementById('error-message');
-      const verifyMsg = document.getElementById('verify-message');
-      errorMsg.textContent = '';
-      verifyMsg.textContent = '';
+      
       if (!email || !password) {
-        errorMsg.textContent = 'Please enter both email and password.';
+        showMessage('error-message', 'Please enter both email and password.');
         return false;
       }
-      // Firebase sign in
+
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           if (user.emailVerified) {
-            window.location.href = 'index.html';
+            // Store user data in Realtime Database
+            firebase.database().ref('users/' + user.uid).set({
+              email: user.email,
+              uid: user.uid,
+              username: user.email.split('@')[0]
+            }).then(() => {
+              // Admin redirect logic
+              if (user.email === 'teamelectrack@gmail.com') {
+                window.location.href = 'admin.html';
+              } else {
+                window.location.href = 'index.html';
+              }
+            }).catch((error) => {
+              showMessage('error-message', 'Failed to save user data: ' + error.message);
+            });
           } else {
-            verifyMsg.textContent = 'Please verify your email address before logging in.';
+            showMessage('verify-message', 'Please verify your email address before logging in.');
             firebase.auth().signOut();
           }
         })
         .catch((error) => {
+          console.error('Login error:', error);
+          let message = '';
           if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-login-credentials') {
-            errorMsg.textContent = 'Invalid email or password. Please try again.';
+            message = 'Invalid email or password. Please try again.';
           } else if (error.code === 'auth/invalid-email') {
-            errorMsg.textContent = 'Invalid email address.';
+            message = 'Invalid email address.';
           } else {
-            errorMsg.textContent = 'An error occurred. Please try again.';
+            message = 'An error occurred while logging in. Please try again.';
           }
+          showMessage('error-message', message);
         });
       return false;
     }
 
-    document.getElementById('google-signin-btn').onclick = function() {
-      var provider = new firebase.auth.GoogleAuthProvider();
+    function handleGoogleSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider)
         .then(function(result) {
-          var user = result.user;
-          // Add user to Realtime Database if not already present
-          firebase.database().ref('users/' + user.uid).once('value').then(function(snapshot) {
-            if (!snapshot.exists()) {
-              firebase.database().ref('users/' + user.uid).set({
-                email: user.email,
-                createdAt: new Date().toISOString(),
-                provider: 'google'
-              });
+          const user = result.user;
+          // Store user data in Realtime Database
+          firebase.database().ref('users/' + user.uid).set({
+            email: user.email,
+            uid: user.uid,
+            username: user.email.split('@')[0]
+          }).then(() => {
+            // Admin redirect logic
+            if (user.email === 'teamelectrack@gmail.com') {
+              window.location.href = 'admin.html';
+            } else {
+              window.location.href = 'index.html';
             }
-            window.location.href = 'index.html';
-          });
+          }).catch((error) => {
+            showMessage('error-message', 'Failed to save user data: ' + error.message);
+                });
         })
         .catch(function(error) {
-          document.getElementById('error-message').textContent = 'Google sign-in failed. Please try again.';
+          console.error('Google sign-in error:', error);
+          if (error.code === 'auth/account-exists-with-different-credential') {
+            const pendingCred = error.credential;
+            const email = error.email;
+            const password = prompt('This email is already registered. Please enter your password to link your Google account:');
+            firebase.auth().signInWithEmailAndPassword(email, password)
+              .then(userCredential => userCredential.user.linkWithCredential(pendingCred))
+              .then(() => {
+                showMessage('success-message', 'Accounts linked successfully!', false);
+                window.location.href = 'index.html';
+              })
+              .catch(linkError => {
+                showMessage('error-message', 'Failed to link accounts: ' + linkError.message);
+              });
+          } else {
+            showMessage('error-message', 'Google sign-in failed. Please try again.');
+          }
         });
-    };
+    }
+
+    // Unused: Example of how to save user data to Realtime Database
+    function saveUserData(user, shouldRedirect = false) {
+      // This function is not used in the login flow.
+      const username = user.displayName || user.email.split('@')[0];
+          firebase.database().ref('users/' + user.uid).set({
+            email: user.email,
+        uid: user.uid,
+        username: username
+          }).then(() => {
+            if (shouldRedirect) window.location.href = 'index.html';
+          }).catch(function(error) {
+            console.error('Database write error:', error);
+        showMessage('error-message', 'Database error: ' + error.message);
+      });
+    }
+
+    // Password toggle functionality
+    const toggleLoginPassword = document.getElementById('toggle-login-password');
+    if (toggleLoginPassword) {
+      toggleLoginPassword.onclick = function() {
+        const input = document.getElementById('password-input');
+        const eye = document.getElementById('eye-login-password');
+        const eyeOff = document.getElementById('eye-off-login-password');
+        if (input.type === 'password') {
+          input.type = 'text';
+          eye.style.display = 'none';
+          eyeOff.style.display = 'inline';
+        } else {
+          input.type = 'password';
+          eye.style.display = 'inline';
+          eyeOff.style.display = 'none';
+        }
+      };
+    }
   </script>
 </body>
 </html>

@@ -569,8 +569,7 @@
     cursor: not-allowed;
   }
 
-  .button-container button:hover:not(:disabled),
-  .button-container button:focus:not(:disabled) {
+  .button-container button:hover:not(:disabled) {
     background: var(--button-hover);
     color: #fff;
     transform: translateY(-2px) scale(1.03);
@@ -580,8 +579,7 @@
     background: #23262b;
     color: #fff;
   }
-  body.dark-mode .button-container button:hover:not(:disabled),
-  body.dark-mode .button-container button:focus:not(:disabled) {
+  body.dark-mode .button-container button:hover:not(:disabled) {
     background: #44474d;
     transform: translateY(-2px) scale(1.03);
   }
@@ -625,4 +623,253 @@
   .remove-row-btn:hover {
     background: #c62828;
     transform: scale(1.1);
+  }
+
+  /* Total cost row styling */
+  #totalCostRow {
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 1.1em;
+    /* border-top: 2px solid #ddd; */
+    border-top: none;
+  }
+
+  body.dark-mode #totalCostRow {
+    background-color: #23272f;
+    /* border-top: 2px solid #444; */
+    border-top: none;
+  }
+
+  #totalCostRow td {
+    padding: 1em;
+    border-bottom: none !important;
+  }
+
+  /* Remove border-bottom from the last data row before the total row */
+  .cost-list-table tr:not(#totalCostRow):last-child td {
+    border-bottom: none;
+  }
+
+  /* Remove blue border on radio, range, and checkbox focus */
+  input[type="radio"]:focus,
+  input[type="range"]:focus,
+  input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .tax-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    margin-bottom: 1em;
+    width: 100%;
+  }
+
+  .tax-option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+
+  .tax-label {
+    font-weight: bold;
+    margin-left: 0.3em;
+  }
+
+  .tax-option .info-icon {
+    font-size: 1em;
+    margin-left: 0.4em;
+    cursor: pointer;
+    vertical-align: middle;
+    color: var(--accent-color);
+    border-radius: 50%;
+    padding: 0 0.2em;
+    transition: background 0.2s;
+    font-weight: normal;
+  }
+
+  .tax-option .info-icon:focus,
+  .tax-option .info-icon:hover {
+    background: #e0e0e0;
+    outline: none;
+  }
+
+  body.dark-mode input,
+  body.dark-mode select {
+    background: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--input-border) !important;
+  }
+
+  .modern-tutorial .tutorial-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .tutorial-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(44, 187, 99, 0.07);
+    padding: 1.2rem 1.5rem;
+  }
+  .step-icon {
+    min-width: 38px;
+    min-height: 38px;
+    background: var(--accent-color);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.2rem;
+    box-shadow: 0 1px 4px rgba(44, 187, 99, 0.12);
+  }
+  .modern-tutorial .highlight {
+    background: linear-gradient(90deg, #eaffd0 0%, #d0ffd6 100%);
+    color: #218c2c;
+    font-weight: 600;
+    padding: 0.12em 0.8em;
+    border-radius: 999px;
+    font-size: 1.08em;
+    letter-spacing: 0.01em;
+    display: inline-block;
+    border: 1.5px solid #b6f77c;
+  }
+  body.dark-mode .modern-tutorial .highlight {
+    background: linear-gradient(90deg, #2d3a2d 0%, #1e2d1e 100%);
+    color: #b6f77c;
+    border: 1.5px solid #4eae3a;
+  }
+  body.dark-mode .modern-tutorial .tutorial-step {
+    background: #181f18;
+    color: #e6ffe6;
+  }
+  body.dark-mode .modern-tutorial .step-icon {
+    background: #2dd335;
+    color: #181f18;
+  }
+
+  select {
+    background: var(--input-bg);
+    border: none;
+    color: var(--text-color);
+    padding: 0.85em 1.2em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: 0 2px 8px rgba(44, 187, 99, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(45, 211, 53, 0.15);
+  }
+
+  body.dark-mode select {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1.5px solid var(--input-border);
+  }
+
+  .custom-select {
+    border-radius: 4px;
+  }
+  .custom-select__options {
+    border-radius: 4px;
+  }
+  .custom-select.open {
+    border-radius: 4px;
+  }
+
+  /* Admin panel button styles */
+  #refreshUsersBtn {
+    max-width: 200px;
+    width: 100%;
+    border-radius: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
+  }
+  .admin-actions button {
+    border-radius: 20px !important;
+  }
+
+  #refreshUsersBtn:hover:not(:disabled),
+  .admin-actions button:hover:not(:disabled) {
+    background: #44474d !important;
+    color: #fff !important;
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  .admin-actions button:nth-child(1) {
+    background: #f06272 !important;
+    color: #fff !important;
+  }
+
+  .admin-actions button:nth-child(2) {
+    background: #ff9800 !important;
+    color: #fff !important;
+  }
+
+  .admin-table {
+    margin: 2rem auto;
+    border-collapse: collapse;
+    width: 98%;
+    max-width: 1100px;
+    min-width: 700px;
+    background: transparent;
+    border-radius: 10px;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  .admin-table th, .admin-table td {
+    padding: 0.75em 1em;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .admin-table th {
+    background: #d1d1d1;
+    color: #2E2B41;
+    font-weight: 700;
+  }
+  .admin-table tr:last-child td {
+    border-bottom: none;
+  }
+  body.dark-mode .admin-table {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  body.dark-mode .admin-table th {
+    background: #23272f;
+    color: #f1f1f1;
+    border-bottom: 1px solid #23272f;
+  }
+  body.dark-mode .admin-table td {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-bottom: 1px solid #444;
+  }
+  @media (max-width: 700px) {
+    .admin-table {
+      width: 600px;
+      min-width: 600px;
+      font-size: 0.95em;
+    }
+  }
+  @media (max-width: 400px) {
+    .admin-table {
+      font-size: 0.85em;
+    }
   }

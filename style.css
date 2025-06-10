@@ -46,15 +46,18 @@ h1{
   font-weight: 900;
   text-transform: uppercase;
   padding-top: 0;
+  margin-bottom: 0;
+  color: var(--text-color);
 }
 
 form{
   width: min(400px, 100%);
+  margin-top: 0;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 form > div{
@@ -250,6 +253,18 @@ form#forgot-form div.incorrect input {
 
 #error-message{
   color:#f06272;
+  min-height: 0;
+  margin-bottom: 0;
+  transition: margin-bottom 0.2s;
+}
+
+#error-message:not(:empty) {
+  margin-bottom: 10px;
+}
+
+#error-message:empty,
+#success-message:empty {
+  display: none;
 }
 
 .error {
@@ -257,4 +272,14 @@ form#forgot-form div.incorrect input {
   font-weight: 500;
   margin-bottom: 1em;
   font-size: 1.1em;
+}
+
+/* Password toggle icon styling */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }

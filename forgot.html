@@ -6,34 +6,94 @@
   <title>ElecTrack</title>
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="validation.js" defer></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="firebase.js"></script>
 </head>
+
+<style>
+      body {
+      min-height: 100vh;
+      background-image: url(images/background.jpg);
+      background-size: cover;
+      background-position: bottom;
+      overflow: hidden;
+      display: flex;
+      justify-content: left;
+    }
+</style>
 
 <body>
   <div class="wrapper">
-    <h1>Reset Password</h1>
+    <h1>Forgot Password</h1>
     <p id="error-message"></p>
-    <form id="forgot-form" method="post" action="forgot.html">
-      <div>
-        <label for="fp-username-input">
+    <form id="forgot-form">
+      <div style="width:100%; display:flex; justify-content:center;">
+        <label for="fp-email-input">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/></svg>
         </label>
-        <input type="text" name="fp_username" id="fp-username-input" placeholder="Username">
+        <input type="email" name="fp_email" id="fp-email-input" placeholder="Email" required autocomplete="email">
       </div>
-      <div>
-        <label for="fp-current-password-input">
+      <div style="width:100%; display:flex; justify-content:center;">
+        <label for="fp-old-password-input">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
         </label>
-        <input type="password" name="fp_current_password" id="fp-current-password-input" placeholder="Current Password">
+        <input type="password" name="fp_old_password" id="fp-old-password-input" placeholder="Old Password" required autocomplete="current-password">
       </div>
-      <div>
-        <label for="fp-new-password-input">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240Zm240-200q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/></svg>
-        </label>
-        <input type="password" name="fp_new_password" id="fp-new-password-input" placeholder="New Password">
-      </div>
-      <button type="submit" name="reset_password">Change Password</button>
+      <button type="submit" name="reset_password">Confirm</button>
     </form>
-    <p><a href="login.html">Back to Login</a></p>
+
+    <a href="login.html" class="back-to-login">Back To Login</a>
   </div>
+  <script>
+    const forgotForm = document.getElementById('forgot-form');
+    const errorMsg = document.getElementById('error-message');
+    forgotForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      errorMsg.textContent = '';
+      errorMsg.style.color = '#d32f2f';
+      const email = document.getElementById('fp-email-input').value.trim();
+      const oldPassword = document.getElementById('fp-old-password-input').value;
+      if (!email) {
+        errorMsg.textContent = 'Please enter your email.';
+        return;
+      }
+      if (!oldPassword) {
+        errorMsg.textContent = 'Please enter your old password.';
+        return;
+      }
+      // Try to sign in with email and old password
+      firebase.auth().signInWithEmailAndPassword(email, oldPassword)
+        .then(function() {
+          // Old password is correct, send reset email
+          firebase.auth().sendPasswordResetEmail(email)
+            .then(function() {
+              errorMsg.style.color = '#388e3c';
+              errorMsg.textContent = 'Password reset email sent! Please check your inbox.';
+              firebase.auth().signOut();
+              setTimeout(function() {
+                window.location.href = 'login.html';
+              }, 1500);
+            })
+            .catch(function(error) {
+              errorMsg.style.color = '#d32f2f';
+              errorMsg.textContent = 'Failed to send password reset email. Please try again later.';
+            });
+        })
+        .catch(function(error) {
+          errorMsg.style.color = '#d32f2f';
+          if (error.code === 'auth/user-not-found') {
+            errorMsg.textContent = 'No account found with this email.';
+          } else if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-login-credentials') {
+            errorMsg.textContent = 'Old password is incorrect.';
+          } else if (error.code === 'auth/invalid-email') {
+            errorMsg.textContent = 'Invalid email address.';
+          } else {
+            errorMsg.textContent = 'Failed to verify old password. Please try again.';
+          }
+        });
+    });
+  </script>
 </body>
 </html>

@@ -9,25 +9,27 @@ const fp_username_input = document.getElementById('fp-username-input')
 const fp_current_password_input = document.getElementById('fp-current-password-input')
 const fp_new_password_input = document.getElementById('fp-new-password-input')
 
-form.addEventListener('submit', (e) => {
-  let errors = []
+if (form) {
+  form.addEventListener('submit', (e) => {
+    let errors = []
 
-  if(username_input && email_input && repeat_password_input){
-    // If we have all signup fields then we are in the signup
-    errors = getSignupFormErrors(username_input.value, email_input.value, 
-                       password_input.value, repeat_password_input.value)
-  }
-  else{
-    // If we don't have all signup fields then we are in the login
-    errors = getLoginFormErrors(username_input.value, password_input.value)
-  }
+    if(username_input && email_input && repeat_password_input){
+      // If we have all signup fields then we are in the signup
+      errors = getSignupFormErrors(username_input.value, email_input.value, 
+                         password_input.value, repeat_password_input.value)
+    }
+    else{
+      // If we don't have all signup fields then we are in the login
+      errors = getLoginFormErrors(username_input.value, password_input.value)
+    }
 
-  if(errors.length > 0){
-    // If there are any errors
-    e.preventDefault()
-    error_message.innerText = errors.join(". ")
-  }
-})
+    if(errors.length > 0){
+      // If there are any errors
+      e.preventDefault()
+      error_message.innerText = errors.join(". ")
+    }
+  })
+}
 
 function getSignupFormErrors(username, email, password, repeatPassword){
   let errors = []
@@ -86,7 +88,6 @@ allInputs.forEach(input => {
     }
   })
 })
-
 if (forgot_form) {
   forgot_form.addEventListener('submit', (e) => {
     let errors = []

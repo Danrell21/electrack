@@ -13,4 +13,4 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 // Initialize Realtime Database
-const database = firebase.database(); 
+// (No need to assign to a variable, just ensure SDK is loaded) 

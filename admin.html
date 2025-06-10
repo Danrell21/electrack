@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body onload="applySavedTheme()">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <h1>ElecTrack Admin</h1>
+    </div>
+    <div class="nav-items">
+      <button onclick="toggleDarkMode()" class="dark-mode-btn" id="darkModeBtn" aria-label="Toggle dark mode">
+        <i class="fa-solid fa-moon" id="darkIcon" style="display:none"></i>
+        <i class="fa-solid fa-sun" id="lightIcon"></i>
+      </button>
+      <a href="#" id="logoutBtn" class="logout-btn" aria-label="Log out">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    </div>
+  </nav>
+  <div class="container">
+    <div style="display: flex; justify-content: center;">
+      <button id="refreshUsersBtn">Refresh</button>
+    </div>
+    <div id="userCount" style="text-align:center; font-size:1.2rem; font-weight:600; margin-bottom:1rem; color:var(--accent-color);">
+      Users: <span id="userCountNumber">0</span>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>UID</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="user-list">
+        <!-- User data will be populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Load users when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUsers();
+    });
+
+    function loadUsers() {
+      const userList = document.getElementById('user-list');
+      const userCountNumber = document.getElementById('userCountNumber');
+      userList.innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading...</td></tr>';
+      firebase.database().ref('users').once('value', function(snapshot) {
+        userList.innerHTML = '';
+        let count = 0;
+        if (!snapshot.exists()) {
+          userList.innerHTML = '<tr><td colspan="3" style="text-align:center;">No users found.</td></tr>';
+          userCountNumber.textContent = '0';
+          return;
+        }
+        snapshot.forEach(function(childSnapshot) {
+          const user = childSnapshot.val();
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.email || ''}</td>
+            <td>${user.uid || ''}</td>
+            <td class="admin-actions">
+              <button onclick="deleteUser('${user.uid}')">Delete</button>
+              <button onclick="disableUser('${user.uid}')">Disable</button>
+            </td>
+          `;
+          userList.appendChild(row);
+          count++;
+        });
+        userCountNumber.textContent = count;
+      }, function(error) {
+        userList.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error loading users: ${error.message}</td></tr>`;
+        userCountNumber.textContent = '0';
+      });
+    }
+
+    function deleteUser(uid) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        // Remove user data from Realtime Database
+        firebase.database().ref('users/' + uid).remove()
+          .then(() => {
+            alert('User deleted successfully');
+            loadUsers();
+          })
+          .catch((error) => {
+            alert('Error deleting user: ' + error.message);
+          });
+      }
+    }
+
+    function disableUser(uid) {
+      if (confirm('Are you sure you want to disable this user?')) {
+        firebase.database().ref('users/' + uid).update({ disabled: true })
+          .then(() => {
+            alert('User disabled successfully');
+            loadUsers();
+          })
+          .catch((error) => {
+            alert('Error disabling user: ' + error.message);
+          });
+      }
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(function() {
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Refresh button event
+    document.addEventListener('DOMContentLoaded', function() {
+      var refreshBtn = document.getElementById('refreshUsersBtn');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+          loadUsers();
+        });
+      }
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          logout();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
