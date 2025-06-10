@@ -873,6 +873,7 @@
     font-size: 0.98em;
     white-space: normal;
     word-break: break-word;
+    color: #fff !important;
   }
 
   .admin-table th {
@@ -925,3 +926,5 @@
       max-width: 100%;
     }
   }
+
+  
