@@ -802,7 +802,13 @@
     margin-bottom: 1.5rem;
   }
   .admin-actions button {
+    max-width: 200px;
+    width: 100%;
     border-radius: 20px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem;
   }
 
   #refreshUsersBtn:hover:not(:disabled),
@@ -819,6 +825,16 @@
 
   .admin-actions button:nth-child(2) {
     background: #ff9800 !important;
+    color: #fff !important;
+  }
+
+  .admin-actions button:nth-child(3) {
+    background: #2196f3 !important;
+    color: #fff !important;
+  }
+
+  .admin-actions button.admin-active {
+    background: #4caf50 !important;
     color: #fff !important;
   }
 

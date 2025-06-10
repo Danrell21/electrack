@@ -163,21 +163,33 @@
 
     document.getElementById('google-signup-btn').onclick = function() {
       var provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
       firebase.auth().signInWithPopup(provider)
         .then(function(result) {
           var user = result.user;
-          // Check if user has a password provider
-          var hasPassword = false;
-          user.providerData.forEach(function(profile) {
-            if (profile.providerId === 'password') {
-              hasPassword = true;
+          // Write user data to Realtime Database
+          firebase.database().ref('users/' + user.uid).set({
+            email: user.email,
+            uid: user.uid,
+            username: user.email.split('@')[0]
+          }).then(() => {
+            // Check if user has a password provider
+            var hasPassword = false;
+            user.providerData.forEach(function(profile) {
+              if (profile.providerId === 'password') {
+                hasPassword = true;
+              }
+            });
+            if (!hasPassword) {
+              window.location.href = 'set-password.html';
+            } else {
+              window.location.href = 'index.html';
             }
+          }).catch((error) => {
+            document.getElementById('error-message').textContent = 'Failed to save user data: ' + error.message;
           });
-          if (!hasPassword) {
-            window.location.href = 'set-password.html';
-          } else {
-            window.location.href = 'index.html';
-          }
         })
         .catch(function(error) {
           if (error.code === 'auth/account-exists-with-different-credential') {

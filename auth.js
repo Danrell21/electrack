@@ -13,7 +13,17 @@ function checkAuth() {
 
 // Check if user is admin
 function isAdmin(user) {
-    return user.email === 'teamelectrack@gmail.com';
+    return new Promise((resolve, reject) => {
+        firebase.database().ref('users/' + user.uid).once('value')
+            .then((snapshot) => {
+                const userData = snapshot.val();
+                resolve(userData && userData.isAdmin === true);
+            })
+            .catch((error) => {
+                console.error('Error checking admin status:', error);
+                reject(error);
+            });
+    });
 }
 
 // Protect routes based on authentication and admin status
@@ -22,9 +32,12 @@ async function protectRoute(requireAdmin = false) {
         const user = await checkAuth();
         
         // If admin access is required, check if user is admin
-        if (requireAdmin && !isAdmin(user)) {
-            window.location.href = 'index.html';
-            return false;
+        if (requireAdmin) {
+            const adminStatus = await isAdmin(user);
+            if (!adminStatus) {
+                window.location.href = 'index.html';
+                return false;
+            }
         }
         
         return true;

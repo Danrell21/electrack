@@ -77,6 +77,9 @@
             <td class="admin-actions">
               <button onclick="deleteUser('${user.uid}')">Delete</button>
               <button onclick="disableUser('${user.uid}')">Disable</button>
+              <button onclick="toggleAdminStatus('${user.uid}', ${user.isAdmin || false})" class="${user.isAdmin ? 'admin-active' : ''}">
+                ${user.isAdmin ? 'Remove Admin' : 'Make Admin'}
+              </button>
             </td>
           `;
           userList.appendChild(row);
@@ -94,8 +97,17 @@
         // Remove user data from Realtime Database
         firebase.database().ref('users/' + uid).remove()
           .then(() => {
-            alert('User deleted successfully');
-            loadUsers();
+            // Call the Cloud Function to delete from Authentication
+            var deleteUserFromAuth = firebase.functions().httpsCallable('deleteUserFromAuth');
+            deleteUserFromAuth({ uid: uid })
+              .then((result) => {
+                alert('User deleted from both database and authentication.');
+                loadUsers();
+              })
+              .catch((error) => {
+                alert('User deleted from database, but failed to delete from authentication: ' + error.message);
+                loadUsers();
+              });
           })
           .catch((error) => {
             alert('Error deleting user: ' + error.message);
@@ -112,6 +124,19 @@
           })
           .catch((error) => {
             alert('Error disabling user: ' + error.message);
+          });
+      }
+    }
+
+    function toggleAdminStatus(uid, currentStatus) {
+      if (confirm(`Are you sure you want to ${currentStatus ? 'remove admin status from' : 'make'} this user?`)) {
+        firebase.database().ref('users/' + uid).update({ isAdmin: !currentStatus })
+          .then(() => {
+            alert(`User ${currentStatus ? 'removed from' : 'promoted to'} admin successfully`);
+            loadUsers();
+          })
+          .catch((error) => {
+            alert('Error updating admin status: ' + error.message);
           });
       }
     }
