@@ -802,13 +802,20 @@
     margin-bottom: 1.5rem;
   }
   .admin-actions button {
-    max-width: 200px;
-    width: 100%;
-    border-radius: 20px !important;
+    width: 30%;
+    max-width: 60px;
+    min-width: 60px;
+    border-radius: 20px;
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1.5rem;
+    font-size: 0.95em;
+    padding: 0.5em;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+    box-sizing: border-box;
   }
 
   #refreshUsersBtn:hover:not(:disabled),
@@ -842,26 +849,30 @@
     width: 100%;
     overflow-x: auto;
     margin: 0 auto;
-    padding: 1.5rem 0;
+    padding: 1rem 0;
   }
 
   .admin-table {
     width: 100%;
-    min-width: 600px;
+    min-width: 500px;
     border-collapse: collapse;
     background: #18191a;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     margin: 0 auto;
     overflow: hidden;
+    font-size: 0.95em;
   }
 
   .admin-table th, .admin-table td {
     text-align: center;
     vertical-align: middle;
-    padding: 1em 1.2em;
+    padding: 0.5em 0.3em;
     border-bottom: 1px solid #23272f;
     background: transparent;
+    font-size: 0.98em;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .admin-table th {
@@ -877,38 +888,40 @@
   .admin-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: 0.3em;
     align-items: center;
     justify-content: center;
-    padding: 0.5em 0;
+    padding: 0.2em 0;
   }
 
   .admin-actions button {
-    width: 120px;
-    min-width: 90px;
-    max-width: 140px;
-    margin-bottom: 0;
-    font-size: 0.98em;
+    width: 65%;
+    min-width: 70px;
+    max-width: 100%;
+    font-size: 1em;
+    padding: 0.9em;
+    margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+    box-sizing: border-box;
   }
 
-  @media (max-width: 700px) {
-    .admin-table {
-      min-width: 400px;
-      font-size: 0.92em;
-    }
-    .admin-table th, .admin-table td {
-      padding: 0.7em 0.5em;
-    }
-  }
-
-  @media (max-width: 500px) {
+  @media (max-width: 600px) {
     .admin-table {
       min-width: 320px;
       font-size: 0.85em;
     }
     .admin-table th, .admin-table td {
-      padding: 0.5em 0.2em;
+      padding: 0.35em 0.1em;
+      font-size: 0.92em;
+    }
+    .admin-actions button {
+      font-size: 0.92em;
+      padding: 0.35em 0.1em;
+      min-width: 60px;
+      max-width: 100%;
     }
   }
